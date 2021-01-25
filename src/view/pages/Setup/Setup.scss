@@ -1,0 +1,10 @@
+.setup{
+    margin-top: 2rem;
+    display: flex;
+        &__left-container{
+            flex: 1 1 70%;
+        }
+        &__right-container{
+            flex: 1 1 30%;
+        }
+}
