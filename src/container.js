@@ -3,9 +3,9 @@ import createRacingRepository from "./infra/racing";
 import createGetRacingSettings from "./app/racing/getRacingSettings";
 
 const racingRepository = createRacingRepository({
-    kartRacingApiService
+  kartRacingApiService,
 });
 
 export const getRacingSettings = createGetRacingSettings({
-    racingRepository
+  racingRepository,
 });

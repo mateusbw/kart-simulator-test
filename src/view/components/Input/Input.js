@@ -10,11 +10,13 @@ const Input = ({
   name,
   inputRef,
   label,
-  id
+  id,
 }) => {
   return (
     <>
-      <label htmlFor={id} className="label">{label} </label>
+      <label htmlFor={id} className="label">
+        {label}{" "}
+      </label>
       <input
         id={id}
         className="input"
@@ -44,6 +46,7 @@ Input.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  inputRef: PropTypes.func.isRequired,
 };
 
 Input.defaultProps = {

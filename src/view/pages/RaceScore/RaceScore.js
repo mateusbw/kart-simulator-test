@@ -1,14 +1,14 @@
-import React from 'react'
-import Page from "../../layout/Page"
+import React from "react";
+import Page from "../../layout/Page";
 
 const RaceScore = () => {
-    return (
-        <Page>
-        <div>
-            <h1>RaceScore</h1>
-        </div>
-        </Page>
-    )
-}
+  return (
+    <Page>
+      <div>
+        <h1>RaceScore</h1>
+      </div>
+    </Page>
+  );
+};
 
-export default RaceScore
+export default RaceScore;
