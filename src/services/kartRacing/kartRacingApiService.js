@@ -13,3 +13,7 @@ export const get = async (url) => {
   const { data } = await axios.get(url);
   return data;
 };
+export const post = async (url) => {
+  const { data } = await axios.post(url);
+  return data;
+};

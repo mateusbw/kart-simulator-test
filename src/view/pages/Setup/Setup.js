@@ -13,8 +13,8 @@ const Setup = () => {
   const { register, handleSubmit, errors } = useForm();
   const history = useHistory();
   const startRace = (value) => {
-    const { sucess } = hooks.useStartRaceDispatch(value);
-    if (sucess) history.push(ROUTER_PATHS.RESULTS);
+    hooks.useStartRaceDispatch(value);
+    history.push(ROUTER_PATHS.RESULTS);
   };
 
   return (

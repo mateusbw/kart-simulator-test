@@ -3,6 +3,7 @@ import { RACING } from "../actionTypes";
 
 const initialState = {
   isLoading: false,
+  isRuningSimulation: false,
   settings: {},
   simulation: {},
   error: undefined,
@@ -17,6 +18,7 @@ export const racingReducer = (state = initialState, action) => {
       });
     case RACING.START_RACE:
       return produce(state, (draft) => {
+        draft.isRuningSimulation = true;
         draft.simulation = action.simulation;
       });
     default:
@@ -43,6 +45,11 @@ const startRaceSimulation = (simulation) => ({
   simulation,
 });
 
+export const getRaceSettings = (state) => state.racing.settings;
+export const getRaceSimulation = (state) => state.racing.simulation;
+export const getIsRunningSimulation = (state) =>
+  state.racing.isRuningSimulation;
+
 export const loadRacingSettings = () => {
   return (dispatch, getState, container) => {
     dispatch(requestRacingSettingPending);
@@ -57,18 +64,16 @@ export const loadRacingSettings = () => {
 
 export const startRace = (simulation) => {
   return (dispatch, getState, container) => {
-    return container.formatRacingStartSimulation(simulation, {
-      onSuccess: (formatedSimulation) => {
-        dispatch(startRaceSimulation(formatedSimulation));
-        return { sucess: true };
-      },
-      onError: (error) => {
-        dispatch(requestRacingSettingError(error));
-        return { sucess: false };
-      },
-    });
+    container.startRacingSimulation(
+      { simulation, settings: getRaceSettings(getState()) },
+      {
+        onSuccess: (formatedSimulation) => {
+          dispatch(startRaceSimulation(formatedSimulation));
+        },
+        onError: (error) => {
+          dispatch(requestRacingSettingError(error));
+        },
+      }
+    );
   };
 };
-
-export const getRaceSettings = (state) => state.racing.settings;
-export const getRaceSimulation = (state) => state.racing.simulation;

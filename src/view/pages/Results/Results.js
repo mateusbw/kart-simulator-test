@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Page from "../../layout/Page";
 import Hooks from "../../../state/hooks";
 
@@ -12,8 +12,8 @@ const Results = () => {
       <div className="card">
         <h2 className="card-title">Partial Results</h2>
         <div className="results">
-          {Object.keys(simulation).map((carId) => (
-            <>
+          {simulation.map((carId) => (
+            <Fragment key={carId}>
               <span className="results__name">{`${
                 simulation[carId].position + 1
               }. ${simulation[carId].racerName}`}</span>
@@ -23,17 +23,17 @@ const Results = () => {
                 <span className="results__partials__label ">
                   Current Speed:
                 </span>
-                {`${simulation[carId].currentSpeed}`}
+                {`${simulation[carId].currentSpeed} Km/h`}
                 <span className="results__partials__label">Average Speed:</span>
-                {`${simulation[carId].averageSpeed}`}
+                {`${simulation[carId].averageSpeed} Km/h`}
                 <span className="results__partials__label">
                   Travelled Distance:
                 </span>
-                {`${simulation[carId].travelledDistance}`}
+                {`${simulation[carId].travelledDistance} meters`}
                 <span className="results__partials__label">Partial Time:</span>
-                {`${simulation[carId].time}`}
+                {`${simulation[carId].time} seconds`}
               </span>
-            </>
+            </Fragment>
           ))}
         </div>
       </div>

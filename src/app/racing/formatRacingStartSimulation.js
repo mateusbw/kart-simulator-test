@@ -4,6 +4,7 @@ const formatRacingStartSimulation = ({ racingRepository }) => {
       const racingSimulation = racingRepository.formatRacingStartSimulation(
         simulation
       );
+
       return onSuccess(racingSimulation);
     } catch (error) {
       return onError(error);

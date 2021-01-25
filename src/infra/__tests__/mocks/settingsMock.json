@@ -1,0 +1,19 @@
+{
+    "cars": [
+        "600f7c6f-369f-4fef-acc4-ea61a9416ead",
+        "fcf3b1bd-5110-4c2e-9ec8-5e62308c2675",
+        "11fa369a-d5a6-4979-942d-9f139670ce6c"
+    ],
+    "cars_count": 3,
+    "checkpoints": [
+        0,
+        130,
+        200,
+        400,
+        500,
+        710,
+        900
+    ],
+    "track_length": 1130,
+    "starting_grid_length": 20
+}

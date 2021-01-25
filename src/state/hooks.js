@@ -5,6 +5,7 @@ import {
   startRace,
   getRaceSettings,
   getRaceSimulation,
+  getIsRunningSimulation,
 } from "./racing/racing";
 
 class HookWraper {
@@ -27,6 +28,10 @@ class HookWraper {
 
   useSimulationReatriver() {
     return useSelector(getRaceSimulation);
+  }
+
+  useIsRunningSimulationReatriver() {
+    return useSelector(getIsRunningSimulation);
   }
 }
 
