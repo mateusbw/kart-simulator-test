@@ -1,19 +1,24 @@
+import produce from "immer";
 import { RACING } from "../actionTypes";
 
 const initialState = {
   isLoading: false,
-  data: [],
+  settings: {},
+  simulation: {},
   error: undefined,
 };
 
 export const racingReducer = (state = initialState, action) => {
   switch (action.type) {
     case RACING.REQUEST_SETTINGS_FULFILLED:
-      return {
-        ...state,
-        isLoading: true,
-        data: action.settings,
-      };
+      return produce(state, (draft) => {
+        draft.isLoading = true;
+        draft.settings = action.settings;
+      });
+    case RACING.START_RACE:
+      return produce(state, (draft) => {
+        draft.simulation = action.simulation;
+      });
     default:
       return state;
   }
@@ -33,7 +38,10 @@ const requestRacingSettingError = (error) => ({
   error,
 });
 
-export const getRaceSettings = (state) => state.racing.data;
+const startRaceSimulation = (simulation) => ({
+  type: RACING.START_RACE,
+  simulation,
+});
 
 export const loadRacingSettings = () => {
   return (dispatch, getState, container) => {
@@ -46,3 +54,21 @@ export const loadRacingSettings = () => {
     });
   };
 };
+
+export const startRace = (simulation) => {
+  return (dispatch, getState, container) => {
+    return container.formatRacingStartSimulation(simulation, {
+      onSuccess: (formatedSimulation) => {
+        dispatch(startRaceSimulation(formatedSimulation));
+        return { sucess: true };
+      },
+      onError: (error) => {
+        dispatch(requestRacingSettingError(error));
+        return { sucess: false };
+      },
+    });
+  };
+};
+
+export const getRaceSettings = (state) => state.racing.settings;
+export const getRaceSimulation = (state) => state.racing.simulation;

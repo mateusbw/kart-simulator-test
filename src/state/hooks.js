@@ -1,13 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadRacingSettings, getRaceSettings } from "./racing/racing";
+import {
+  loadRacingSettings,
+  startRace,
+  getRaceSettings,
+  getRaceSimulation,
+} from "./racing/racing";
 
-export const useRacingSettingsDispatch = () => {
-  const raceSettings = useSelector(getRaceSettings);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(loadRacingSettings());
-  }, [dispatch]);
+class HookWraper {
+  constructor() {
+    this.dispatch = useDispatch();
+  }
 
-  return raceSettings;
-};
+  useRacingSettingsReatriver() {
+    const raceSettings = useSelector(getRaceSettings);
+    useEffect(() => {
+      this.dispatch(loadRacingSettings());
+    }, [this.dispatch]);
+
+    return raceSettings;
+  }
+
+  useStartRaceDispatch(simulation) {
+    return this.dispatch(startRace(simulation));
+  }
+
+  useSimulationReatriver() {
+    return useSelector(getRaceSimulation);
+  }
+}
+
+export default HookWraper;

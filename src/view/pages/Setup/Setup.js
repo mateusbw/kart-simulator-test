@@ -1,15 +1,25 @@
 import React from "react";
 import "./Setup.scss";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import HookWraper from "../../../state/hooks";
 import Page from "../../layout/Page";
 import Input from "../../components/Input/Input";
-
-import { useRacingSettingsDispatch } from "../../../state/hooks";
+import ROUTER_PATHS from "../../routes/RouterPaths";
 
 const Setup = () => {
-  const raceSettings = useRacingSettingsDispatch();
+  const hooks = new HookWraper();
+  const raceSettings = hooks.useRacingSettingsReatriver();
+  const { register, handleSubmit, errors } = useForm();
+  const history = useHistory();
+  const startRace = (value) => {
+    const { sucess } = hooks.useStartRaceDispatch(value);
+    if (sucess) history.push(ROUTER_PATHS.RESULTS);
+  };
+
   return (
     <Page>
-      <div className="setup">
+      <form className="setup" onSubmit={handleSubmit(startRace)}>
         <div className="setup__left-container">
           <div className="card">
             <h2 className="card-title">Racer Names</h2>
@@ -17,10 +27,15 @@ const Setup = () => {
               raceSettings.cars.map((car) => (
                 <Input
                   key={car}
+                  inputRef={register({
+                    required: "Please, inform a racer name!",
+                  })}
                   placeholder="Eg: Rubinho Barichello"
-                  name="racerName"
+                  name={`cars.${car}`}
                   id={`racerNameInput${car}`}
                   label={`Racer Name (Cart: ${car})`}
+                  errorMessage={errors[car]?.message}
+                  hasError={!!errors[car]}
                 />
               ))}
           </div>
@@ -29,17 +44,22 @@ const Setup = () => {
           <div className="card">
             <h2 className="card-title">Lapes</h2>
             <Input
+              inputRef={register({
+                required: "Please, inform the number of lapes!",
+              })}
               placeholder="Eg: 10"
-              name="racerName"
+              name="lapes"
               id="lapesCount"
               label="Number of Lapes"
+              errorMessage={errors.lapes?.message}
+              hasError={!!errors.lapes}
             />
           </div>
           <button className="button" type="submit">
             Start Race
           </button>
         </div>
-      </div>
+      </form>
     </Page>
   );
 };

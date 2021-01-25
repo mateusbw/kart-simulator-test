@@ -1,0 +1,21 @@
+@import "../../styles/variables.scss";
+.results{
+    margin-top: 1rem;
+    &__name{
+        display: block;
+        font-weight: bold;
+        color: $black;
+    }
+    &__partials{
+        margin-bottom: 1rem;
+        display: block;
+        &__label{
+            font-weight: bold;
+            color: $dark-gray;
+            margin-right: .5rem;
+            &:not(:first-of-type){
+                margin-left: 1rem;
+            }
+        }
+    }
+}

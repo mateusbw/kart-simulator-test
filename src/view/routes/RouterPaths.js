@@ -1,7 +1,7 @@
 const ROUTER_PATHS = {
   HOME: "/",
   SETUP: "/setup",
-  SCORE: "/score",
+  RESULTS: "/results",
 };
 
 export default ROUTER_PATHS;

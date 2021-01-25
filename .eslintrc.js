@@ -20,6 +20,7 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "class-methods-use-this": "off",
     "react/jsx-filename-extension": ["warn", { extensions: [".jsx", ".js"] }],
     "import/prefer-default-export": "off",
     "no-param-reassign": "off",
