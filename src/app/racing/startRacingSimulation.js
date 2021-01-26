@@ -1,26 +1,34 @@
+import { calculateRacePartials, isRaceFinished } from "../../domain/Race/Race";
+
+let poolingInterval;
+
 const startRacingSimulation = ({ racingRepository }) => {
-  return ({ simulation, settings }, { onSuccess, onError }) => {
-    racingRepository
-      .startRacingSimulation()
-      .then(() => {
-        const racingSimulation = racingRepository.formatRacingStartSimulation(
-          simulation
+  return async (
+    { simulation, settings },
+    { onSuccessStart, onSucessPolling, onFinishing, onError }
+  ) => {
+    try {
+      const racingSimulation = await racingRepository.startRacingSimulation(
+        simulation
+      );
+      onSuccessStart(racingSimulation);
+      poolingInterval = setInterval(async () => {
+        const checkpoints = await racingRepository.getRacingCheckPoints();
+        const partials = calculateRacePartials(
+          checkpoints,
+          settings,
+          racingSimulation
         );
-        onSuccess(racingSimulation);
-        setInterval(() => {
-          racingRepository.getRacingCheckPoints().then((checkpoints) => {
-            const partials = racingRepository.calculateRacePartials(
-              checkpoints,
-              settings,
-              racingSimulation
-            );
-            onSuccess(partials);
-          });
-        }, 5000);
-      })
-      .catch((error) => {
-        onError(error);
-      });
+        onSucessPolling(partials);
+        if (isRaceFinished(partials)) {
+          clearInterval(poolingInterval);
+          await racingRepository.stopRacingSimulation();
+          onFinishing();
+        }
+      }, 5000);
+    } catch (error) {
+      onError(error);
+    }
   };
 };
 

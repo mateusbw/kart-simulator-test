@@ -22,8 +22,8 @@ class HookWraper {
     return raceSettings;
   }
 
-  useStartRaceDispatch(simulation) {
-    return this.dispatch(startRace(simulation));
+  useStartRaceDispatch(simulation, callback) {
+    return this.dispatch(startRace(simulation, callback));
   }
 
   useSimulationReatriver() {

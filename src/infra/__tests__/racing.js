@@ -74,10 +74,13 @@ describe("Racing Repository", () => {
     });
   });
   describe("calculateRacePartials", () => {
-    it("should format checkpoints correctly", () => {
+    it("should calculate race partials correctly", () => {
+      const formatedCheckpoints = racingRepository({}).formatCheckpoints(
+        checkpoints
+      );
       expect(
         racingRepository({}).calculateRacePartials(
-          checkpoints,
+          formatedCheckpoints,
           settings,
           simulation
         )
@@ -88,7 +91,7 @@ describe("Racing Repository", () => {
           currentLape: 1,
           currentSpeed: 52,
           racerName: "A",
-          time: 81,
+          time: 80781,
           totalLapes: "10",
           travelledDistance: 1130,
         },
@@ -98,7 +101,7 @@ describe("Racing Repository", () => {
           currentLape: 0,
           currentSpeed: 49,
           racerName: "C",
-          time: 64,
+          time: 63854,
           totalLapes: "10",
           travelledDistance: 900,
         },
@@ -108,7 +111,7 @@ describe("Racing Repository", () => {
           currentLape: 0,
           currentSpeed: 49,
           racerName: "B",
-          time: 66,
+          time: 65595,
           totalLapes: "10",
           travelledDistance: 900,
         },

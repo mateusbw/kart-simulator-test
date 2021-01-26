@@ -1,10 +1,13 @@
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 export const normalizeUnixEpochDate = (date) =>
   DateTime.fromMillis(date).toISO();
 
-export const diffTime = (a, b) =>
-  Math.round(DateTime.fromMillis(a).diff(DateTime.fromMillis(b)).as("seconds"));
+export const diffTime = (a, b, unit = "seconds") =>
+  Math.round(DateTime.fromMillis(a).diff(DateTime.fromMillis(b)).as(unit));
+
+export const millisToFormat = (milliseconds) =>
+  Duration.fromMillis(milliseconds).toFormat("mm:ss:SSS");
 
 export const sortByDateAsc = (date1, date2) => {
   if (date1 > date2) {

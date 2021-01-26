@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   isRuningSimulation: false,
   settings: {},
-  simulation: {},
+  simulation: [],
   error: undefined,
 };
 
@@ -19,6 +19,10 @@ export const racingReducer = (state = initialState, action) => {
     case RACING.START_RACE:
       return produce(state, (draft) => {
         draft.isRuningSimulation = true;
+        draft.simulation = action.simulation;
+      });
+    case RACING.UPDATE_SIMULATION:
+      return produce(state, (draft) => {
         draft.simulation = action.simulation;
       });
     default:
@@ -45,6 +49,11 @@ const startRaceSimulation = (simulation) => ({
   simulation,
 });
 
+const updateSimulation = (simulation) => ({
+  type: RACING.UPDATE_SIMULATION,
+  simulation,
+});
+
 export const getRaceSettings = (state) => state.racing.settings;
 export const getRaceSimulation = (state) => state.racing.simulation;
 export const getIsRunningSimulation = (state) =>
@@ -62,13 +71,20 @@ export const loadRacingSettings = () => {
   };
 };
 
-export const startRace = (simulation) => {
+export const startRace = (simulation, callback) => {
   return (dispatch, getState, container) => {
     container.startRacingSimulation(
       { simulation, settings: getRaceSettings(getState()) },
       {
-        onSuccess: (formatedSimulation) => {
+        onSuccessStart: (formatedSimulation) => {
           dispatch(startRaceSimulation(formatedSimulation));
+          callback();
+        },
+        onSucessPolling: (updatedSimulation) => {
+          dispatch(updateSimulation(updatedSimulation));
+        },
+        onFinishing: () => {
+          console.log("TERMINOU CORRIDA");
         },
         onError: (error) => {
           dispatch(requestRacingSettingError(error));

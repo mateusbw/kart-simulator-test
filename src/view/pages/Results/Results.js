@@ -1,37 +1,44 @@
 import React, { Fragment } from "react";
 import Page from "../../layout/Page";
 import Hooks from "../../../state/hooks";
+import { millisToFormat } from "../../../utils/timeUtil";
 
 import "./Results.scss";
 
 const Results = () => {
   const useHooks = new Hooks();
   const simulation = useHooks.useSimulationReatriver();
+
+  const formatTime = (time) => {
+    return millisToFormat(time);
+  };
   return (
     <Page>
       <div className="card">
         <h2 className="card-title">Partial Results</h2>
         <div className="results">
-          {simulation.map((carId) => (
-            <Fragment key={carId}>
-              <span className="results__name">{`${
-                simulation[carId].position + 1
-              }. ${simulation[carId].racerName}`}</span>
+          {simulation.map((simulationCar, index) => (
+            <Fragment key={simulationCar.carId}>
+              <span className="results__name">{`${index + 1}. ${
+                simulationCar.racerName
+              }`}</span>
               <span className="results__partials">
                 <span className="results__partials__label">Lapes:</span>
-                {`${simulation[carId].currentLape}/${simulation[carId].totalLapes}`}
+                {`${simulationCar.currentLape}/${simulationCar.totalLapes}`}
                 <span className="results__partials__label ">
                   Current Speed:
                 </span>
-                {`${simulation[carId].currentSpeed} Km/h`}
+                {`${simulationCar.currentSpeed} Km/h`}
                 <span className="results__partials__label">Average Speed:</span>
-                {`${simulation[carId].averageSpeed} Km/h`}
+                {`${simulationCar.averageSpeed} Km/h`}
                 <span className="results__partials__label">
                   Travelled Distance:
                 </span>
-                {`${simulation[carId].travelledDistance} meters`}
-                <span className="results__partials__label">Partial Time:</span>
-                {`${simulation[carId].time} seconds`}
+                {`${simulationCar.travelledDistance} meters`}
+                <span className="results__partials__label">
+                  Partial Time (mm:ss:ms):
+                </span>
+                {`${formatTime(simulationCar.time)}`}
               </span>
             </Fragment>
           ))}
