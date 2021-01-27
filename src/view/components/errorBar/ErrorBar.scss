@@ -1,0 +1,26 @@
+.error-bar{
+    position: absolute;
+    background-color: #ee3b2e;
+    width: 100%;
+    left: 0;
+    color: white;
+    padding: .5rem;
+    text-align: center;
+    transition: all 1s ease-in-out;
+}
+.leave{
+    top: -100px;
+    
+}
+.enter{
+    top: 0;
+
+}
+.retry{
+    background-color: transparent;
+    border: none;
+    color: white;
+    &:hover{
+        text-decoration: underline;
+    }
+}

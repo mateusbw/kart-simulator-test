@@ -17,6 +17,11 @@ export const racingReducer = (state = initialState, action) => {
         draft.isLoading = true;
         draft.settings = action.settings;
       });
+    case RACING.REQUEST_REQUEST_ERROR:
+      return produce(state, (draft) => {
+        draft.isLoading = false;
+        draft.error = action.error;
+      });
     case RACING.START_RACE:
       return produce(state, (draft) => {
         draft.isRuningSimulation = true;
@@ -30,6 +35,10 @@ export const racingReducer = (state = initialState, action) => {
       return produce(state, (draft) => {
         draft.isRuningSimulation = false;
         draft.result = action.result;
+      });
+    case RACING.RETRY_ACTION:
+      return produce(state, (draft) => {
+        delete draft.error;
       });
     default:
       return state;
@@ -45,8 +54,8 @@ const requestRacingSettingFulfilled = (settings) => ({
   settings,
 });
 
-const requestRacingSettingError = (error) => ({
-  type: RACING.REQUEST_SETTINGS_ERROR,
+const requestRacingError = (error) => ({
+  type: RACING.REQUEST_REQUEST_ERROR,
   error,
 });
 
@@ -65,11 +74,20 @@ const stopSimulation = (result) => ({
   result,
 });
 
+const retryAction = {
+  type: RACING.RETRY_ACTION,
+};
+
 export const getRaceSettings = (state) => state.racing.settings;
 export const getRaceSimulation = (state) => state.racing.simulation;
 export const getIsRunningSimulation = (state) =>
   state.racing.isRuningSimulation;
 export const getRaceResult = (state) => state.racing.result;
+export const getRacingErrorMessage = (state) =>
+  state.racing.error && state.racing.error.message;
+
+// eslint-disable-next-line import/no-mutable-exports
+export let retryActon;
 
 export const loadRacingSettings = () => {
   return (dispatch, getState, container) => {
@@ -78,8 +96,75 @@ export const loadRacingSettings = () => {
     container.getRacingSettings({
       onSuccess: (settings) =>
         dispatch(requestRacingSettingFulfilled(settings)),
-      onError: (error) => dispatch(requestRacingSettingError(error)),
+      onError: (error) => {
+        dispatch(requestRacingError(error, loadRacingSettings));
+        retryActon = () => {
+          return (dispatchRetry) => {
+            dispatchRetry(retryAction);
+            dispatchRetry(loadRacingSettings());
+          };
+        };
+      },
     });
+  };
+};
+
+export const finishRaceSimulation = (partials, onFinishComponentCallback) => {
+  return (dispatch, getState, container) => {
+    container.stopRacingSimulation(
+      { partials },
+      {
+        onFinishing: (result) => {
+          onFinishComponentCallback();
+          dispatch(stopSimulation(result));
+        },
+        onError: (error) => {
+          dispatch(requestRacingError(error));
+          retryActon = () => {
+            return (dispatchRetry) => {
+              dispatchRetry(retryAction);
+              dispatchRetry(
+                finishRaceSimulation(partials, onFinishComponentCallback)
+              );
+            };
+          };
+        },
+      }
+    );
+  };
+};
+
+export const startCheckpointPooling = (
+  racingSimulation,
+  onFinishComponentCallback
+) => {
+  return (dispatch, getState, container) => {
+    const settings = getRaceSettings(getState());
+    container.checkpointsPoolingHandler(
+      { racingSimulation, settings },
+      {
+        onSucessPolling: (partials) => {
+          dispatch(updateSimulation(partials));
+        },
+        onFinishedPooling: (partials) => {
+          dispatch(finishRaceSimulation(partials, onFinishComponentCallback));
+        },
+        onError: (error) => {
+          dispatch(requestRacingError(error));
+          retryActon = () => {
+            return (dispatchRetry) => {
+              dispatchRetry(retryAction);
+              dispatchRetry(
+                startCheckpointPooling(
+                  racingSimulation,
+                  onFinishComponentCallback
+                )
+              );
+            };
+          };
+        },
+      }
+    );
   };
 };
 
@@ -89,22 +174,34 @@ export const startRace = (
   onFinishComponentCallback
 ) => {
   return (dispatch, getState, container) => {
+    const settings = getRaceSettings(getState());
     container.startRacingSimulation(
-      { simulation, settings: getRaceSettings(getState()) },
+      { simulation, settings },
       {
         onSuccessStart: (formatedSimulation) => {
           dispatch(startRaceSimulation(formatedSimulation));
           onStartComponentcallback();
-        },
-        onSucessPolling: (updatedSimulation) => {
-          dispatch(updateSimulation(updatedSimulation));
-        },
-        onFinishing: (result) => {
-          onFinishComponentCallback();
-          dispatch(stopSimulation(result));
+          dispatch(
+            startCheckpointPooling(
+              formatedSimulation,
+              onFinishComponentCallback
+            )
+          );
         },
         onError: (error) => {
-          dispatch(requestRacingSettingError(error));
+          dispatch(requestRacingError(error));
+          retryActon = () => {
+            return (dispatchRetry) => {
+              dispatchRetry(retryAction);
+              dispatchRetry(
+                startRace(
+                  simulation,
+                  onStartComponentcallback,
+                  onFinishComponentCallback
+                )
+              );
+            };
+          };
         },
       }
     );

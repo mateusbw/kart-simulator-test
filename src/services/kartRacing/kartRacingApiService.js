@@ -7,8 +7,8 @@ const axios = Axios.create({
   headers: {
     "Content-Type": "application/json; charset=utf-8",
   },
+  timeout: 5000,
 });
-
 export const get = async (url) => {
   const { data } = await axios.get(url);
   return data;

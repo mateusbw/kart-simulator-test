@@ -7,6 +7,8 @@ import {
   getRaceSimulation,
   getIsRunningSimulation,
   getRaceResult,
+  getRacingErrorMessage,
+  retryActon,
 } from "./racing/racing";
 
 class HookWraper {
@@ -43,6 +45,14 @@ class HookWraper {
 
   useRaceResultReatriver() {
     return useSelector(getRaceResult);
+  }
+
+  useRacingErrorReatriver() {
+    return useSelector(getRacingErrorMessage);
+  }
+
+  useRetryErrorDispatch() {
+    this.dispatch(retryActon());
   }
 }
 

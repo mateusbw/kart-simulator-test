@@ -60,6 +60,7 @@ const Setup = () => {
               label="Number of Lapes"
               errorMessage={errors.lapes?.message}
               hasError={!!errors.lapes}
+              type="number"
             />
           </div>
           <button className="button" type="submit">
