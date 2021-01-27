@@ -22,7 +22,7 @@ const racingRepository = ({ kartRacingApiService }) => ({
   },
 
   formatRacingStartSimulation(simulation) {
-    return Object.keys(simulation.cars).reduce((prev, current) => {
+    return Object.keys(simulation.cars).reduce((prev, current, index) => {
       prev.push({
         carId: current,
         racerName: simulation.cars[current],
@@ -32,6 +32,7 @@ const racingRepository = ({ kartRacingApiService }) => ({
         averageSpeed: 0,
         travelledDistance: 0,
         time: 0,
+        startingGrid: index + 1,
       });
       return prev;
     }, []);

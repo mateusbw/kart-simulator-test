@@ -29,7 +29,10 @@ body{
     text-transform: uppercase;
     border: none;
     border-radius: 5px;
-    padding: .25rem 1rem
+    padding: .25rem 1rem;
+    &:hover{
+        background-color: darken($dark-gray, 10%);
+    }
 }
 
 .input {

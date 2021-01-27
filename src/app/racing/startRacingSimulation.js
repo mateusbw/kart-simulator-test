@@ -1,4 +1,8 @@
-import { calculateRacePartials, isRaceFinished } from "../../domain/Race/Race";
+import {
+  calculateRacePartials,
+  isRaceFinished,
+  formatResult,
+} from "../../domain/Race/Race";
 
 let poolingInterval;
 
@@ -23,7 +27,7 @@ const startRacingSimulation = ({ racingRepository }) => {
         if (isRaceFinished(partials)) {
           clearInterval(poolingInterval);
           await racingRepository.stopRacingSimulation();
-          onFinishing();
+          onFinishing(formatResult(partials));
         }
       }, 5000);
     } catch (error) {

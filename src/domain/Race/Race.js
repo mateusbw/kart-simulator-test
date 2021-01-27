@@ -1,4 +1,4 @@
-import { diffTime } from "../../utils/timeUtil";
+import { diffTime, millisToFormat } from "../../utils/timeUtil";
 
 export const sortPosition = (carSimulationA, carSimulationB) => {
   if (carSimulationA.travelledDistance === carSimulationB.travelledDistance) {
@@ -45,18 +45,37 @@ export const calculateCurrentSeed = (carCheckpoits = [], trackLength) => {
     lastPosition - carCheckpoits[carCheckpoits.length - 2].position;
   const time = diffTime(
     carCheckpoits[carCheckpoits.length - 1].timestamp,
-    carCheckpoits[carCheckpoits.length - 2].timestamp
+    carCheckpoits[carCheckpoits.length - 2].timestamp,
+    "milliseconds"
   );
-  return Math.round((distance / time) * 3.6);
+  return ((distance / time) * 3600).toFixed(1);
 };
 
 export const calculateAverageSpeed = (carCheckpoits = [], settings) => {
   if (!calculateTime(carCheckpoits)) return 0;
-  return Math.round(
+  return (
     (calculateTravelledDistance(carCheckpoits, settings) /
       calculateTime(carCheckpoits)) *
-      3600
+    3600
+  ).toFixed(1);
+};
+
+export const calculateBestLap = (
+  currentBestLap = { time: 0, lap: 0 },
+  carCheckpoits = [],
+  settings
+) => {
+  const lastDoneLape = calculateCurrentLape(carCheckpoits, settings);
+  if (!lastDoneLape) return currentBestLap;
+
+  const lastLapeTime = diffTime(
+    carCheckpoits[lastDoneLape * 8 - 1].timestamp,
+    carCheckpoits[(lastDoneLape - 1) * 8].timestamp,
+    "milliseconds"
   );
+  return lastLapeTime <= currentBestLap.time || !currentBestLap.lap
+    ? { time: lastLapeTime, lap: lastDoneLape }
+    : currentBestLap;
 };
 
 export const isRaceFinished = (simulation) => {
@@ -90,8 +109,41 @@ export const calculateRacePartials = (checkpoints, settings, simulation) =>
             isFinished:
               carSimulation.totalLapes ===
               calculateCurrentLape(checkpoints[carSimulation.carId], settings),
+            bestLap: calculateBestLap(
+              carSimulation.bestLap,
+              checkpoints[carSimulation.carId],
+              settings
+            ),
           }
     )
     .sort((carSimulationA, carSimulationB) =>
       sortPosition(carSimulationA, carSimulationB)
     );
+
+export const calculateDiffToWinner = (currentRacer, bestRacer) => {
+  if (currentRacer.carId === bestRacer.carId) return null;
+  return millisToFormat(
+    diffTime(currentRacer.time, bestRacer.time, "milliseconds")
+  );
+};
+
+export const calculateGapp = (currentRacer, aheadRacer) => {
+  if (!aheadRacer) return null;
+  return millisToFormat(
+    diffTime(currentRacer.time, aheadRacer.time, "milliseconds")
+  );
+};
+export const formatResult = (simulation) => {
+  const resultsHeader = `Automobile,Name,TotalLaps,TotalTime,BestLap,TimeBestLap,Diff,Gap,StartingGrid,AverageVelocity\n`;
+  return simulation.reduce((result, sim, index) => {
+    result += `${sim.carId},${sim.racerName},${sim.totalLapes},${millisToFormat(
+      sim.time
+    )},${sim.bestLap.lap},${millisToFormat(
+      sim.bestLap.time
+    )},${calculateDiffToWinner(sim, simulation[0])},${calculateGapp(
+      sim,
+      simulation[index - 1]
+    )},${sim.startingGrid},${sim.averageSpeed}\n`;
+    return result;
+  }, resultsHeader);
+};

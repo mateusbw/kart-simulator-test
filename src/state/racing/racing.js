@@ -6,6 +6,7 @@ const initialState = {
   isRuningSimulation: false,
   settings: {},
   simulation: [],
+  result: "",
   error: undefined,
 };
 
@@ -24,6 +25,11 @@ export const racingReducer = (state = initialState, action) => {
     case RACING.UPDATE_SIMULATION:
       return produce(state, (draft) => {
         draft.simulation = action.simulation;
+      });
+    case RACING.STOP_SIMULATION:
+      return produce(state, (draft) => {
+        draft.isRuningSimulation = false;
+        draft.result = action.result;
       });
     default:
       return state;
@@ -54,10 +60,16 @@ const updateSimulation = (simulation) => ({
   simulation,
 });
 
+const stopSimulation = (result) => ({
+  type: RACING.STOP_SIMULATION,
+  result,
+});
+
 export const getRaceSettings = (state) => state.racing.settings;
 export const getRaceSimulation = (state) => state.racing.simulation;
 export const getIsRunningSimulation = (state) =>
   state.racing.isRuningSimulation;
+export const getRaceResult = (state) => state.racing.result;
 
 export const loadRacingSettings = () => {
   return (dispatch, getState, container) => {
@@ -71,20 +83,25 @@ export const loadRacingSettings = () => {
   };
 };
 
-export const startRace = (simulation, callback) => {
+export const startRace = (
+  simulation,
+  onStartComponentcallback,
+  onFinishComponentCallback
+) => {
   return (dispatch, getState, container) => {
     container.startRacingSimulation(
       { simulation, settings: getRaceSettings(getState()) },
       {
         onSuccessStart: (formatedSimulation) => {
           dispatch(startRaceSimulation(formatedSimulation));
-          callback();
+          onStartComponentcallback();
         },
         onSucessPolling: (updatedSimulation) => {
           dispatch(updateSimulation(updatedSimulation));
         },
-        onFinishing: () => {
-          console.log("TERMINOU CORRIDA");
+        onFinishing: (result) => {
+          onFinishComponentCallback();
+          dispatch(stopSimulation(result));
         },
         onError: (error) => {
           dispatch(requestRacingSettingError(error));

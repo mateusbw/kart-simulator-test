@@ -6,6 +6,7 @@ import {
   getRaceSettings,
   getRaceSimulation,
   getIsRunningSimulation,
+  getRaceResult,
 } from "./racing/racing";
 
 class HookWraper {
@@ -22,8 +23,14 @@ class HookWraper {
     return raceSettings;
   }
 
-  useStartRaceDispatch(simulation, callback) {
-    return this.dispatch(startRace(simulation, callback));
+  useStartRaceDispatch(
+    simulation,
+    onStartComponentcallback,
+    onFinishComponentCallback
+  ) {
+    return this.dispatch(
+      startRace(simulation, onStartComponentcallback, onFinishComponentCallback)
+    );
   }
 
   useSimulationReatriver() {
@@ -32,6 +39,10 @@ class HookWraper {
 
   useIsRunningSimulationReatriver() {
     return useSelector(getIsRunningSimulation);
+  }
+
+  useRaceResultReatriver() {
+    return useSelector(getRaceResult);
   }
 }
 

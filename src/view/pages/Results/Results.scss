@@ -1,21 +1,58 @@
 @import "../../styles/variables.scss";
+$bronze: #a1720a;
+$light-bronze: #c48d17;
+$light-gold: #ffe79a;
+$light-silver: #e7e7e7;
 .results{
-    margin-top: 1rem;
-    &__name{
-        display: block;
-        font-weight: bold;
-        color: $black;
+    display: flex;
+    flex-direction: column;
+    &__download{
+        align-self: flex-end;
+        margin-right: 1rem;
+        text-decoration: none;
     }
-    &__partials{
-        margin-bottom: 1rem;
-        display: block;
-        &__label{
-            font-weight: bold;
-            color: $dark-gray;
-            margin-right: .5rem;
-            &:not(:first-of-type){
-                margin-left: 1rem;
+    .card{
+        &__results{
+            margin-top: 1rem;
+            &__racer{
+                padding: .5rem;
+                margin-bottom: .25rem;
+                &__name{
+                    font-weight: bold;
+                    color: $dark-gray;
+                    font-size: 22px;
+                }
+                &__time{
+                    margin-left: .5rem;
+                    font-size: 22px;
+                }
+                &:nth-of-type(1){
+                    background-image: linear-gradient(90deg,gold 0%, gold 45%, $light-gold 50%, gold 55%, gold 100%);
+                    background-size: 200% 100%;
+                    animation: animateBG 1s infinite linear;
+                }
+                &:nth-of-type(2){
+                    background-image: linear-gradient(90deg,silver 0%, silver 45%, $light-silver 50%, silver 55%, silver 100%);
+                    background-size: 200% 100%;
+                    animation: animateBG 1s infinite linear;
+                    animation-delay: 100ms;
+                }
+                &:nth-of-type(3){
+                    background-image: linear-gradient(90deg,  $bronze 0%, $bronze 45%, $light-bronze 50%, $bronze 55%, $bronze 100%);
+                    background-size: 200% 100%;
+                    animation: animateBG 1s infinite linear;
+                    animation-delay: 200ms;
+                }
             }
         }
+    }
+}
+
+@keyframes animateBG{
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: 0 0;
     }
 }

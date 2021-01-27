@@ -1,8 +1,6 @@
-import racingRepository from "../racing";
+import racingRepository from "../../infra/racing";
 
-import checkpoints from "./mocks/checkpointsMock.json";
-import settings from "./mocks/settingsMock.json";
-import simulation from "./mocks/simulationMock.json";
+import checkpoints from "../__mocks__/checkpointsMock.json";
 
 describe("Racing Repository", () => {
   describe("formatRacingStartSimulation", () => {
@@ -25,6 +23,7 @@ describe("Racing Repository", () => {
           averageSpeed: 0,
           travelledDistance: 0,
           time: 0,
+          startingGrid: 1,
         },
         {
           carId: "600f7c6f-369f-4fef-acc4-ea61a9416ea2",
@@ -35,6 +34,7 @@ describe("Racing Repository", () => {
           averageSpeed: 0,
           travelledDistance: 0,
           time: 0,
+          startingGrid: 2,
         },
       ]);
     });
@@ -71,51 +71,6 @@ describe("Racing Repository", () => {
           { position: 900, timestamp: 1611608288039 },
         ],
       });
-    });
-  });
-  describe("calculateRacePartials", () => {
-    it("should calculate race partials correctly", () => {
-      const formatedCheckpoints = racingRepository({}).formatCheckpoints(
-        checkpoints
-      );
-      expect(
-        racingRepository({}).calculateRacePartials(
-          formatedCheckpoints,
-          settings,
-          simulation
-        )
-      ).toEqual([
-        {
-          carId: "600f7c6f-369f-4fef-acc4-ea61a9416ead",
-          averageSpeed: 50,
-          currentLape: 1,
-          currentSpeed: 52,
-          racerName: "A",
-          time: 80781,
-          totalLapes: "10",
-          travelledDistance: 1130,
-        },
-        {
-          carId: "11fa369a-d5a6-4979-942d-9f139670ce6c",
-          averageSpeed: 51,
-          currentLape: 0,
-          currentSpeed: 49,
-          racerName: "C",
-          time: 63854,
-          totalLapes: "10",
-          travelledDistance: 900,
-        },
-        {
-          carId: "fcf3b1bd-5110-4c2e-9ec8-5e62308c2675",
-          averageSpeed: 49,
-          currentLape: 0,
-          currentSpeed: 49,
-          racerName: "B",
-          time: 65595,
-          totalLapes: "10",
-          travelledDistance: 900,
-        },
-      ]);
     });
   });
 });

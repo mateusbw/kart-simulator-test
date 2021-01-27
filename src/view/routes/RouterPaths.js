@@ -1,6 +1,7 @@
 const ROUTER_PATHS = {
   HOME: "/",
   SETUP: "/setup",
+  SIMULATION: "/simulation",
   RESULTS: "/results",
 };
 
