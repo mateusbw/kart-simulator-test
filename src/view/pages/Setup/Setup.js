@@ -41,8 +41,8 @@ const Setup = () => {
                   name={`cars.${car}`}
                   id={`racerNameInput${car}`}
                   label={`Racer Name (Cart: ${car})`}
-                  errorMessage={errors[car]?.message}
-                  hasError={!!errors[car]}
+                  errorMessage={errors.cars && errors.cars[car]?.message}
+                  hasError={errors.cars && !!errors.cars[car]}
                 />
               ))}
           </div>
