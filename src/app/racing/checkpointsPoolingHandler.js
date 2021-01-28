@@ -1,6 +1,7 @@
 import { calculateRacePartials, isRaceFinished } from "../../domain/Race/Race";
 
 let poolingInterval;
+const POOLING_INTERVAL = 2500;
 
 const checkpointsPoolingHandler = ({ racingRepository }) => {
   return async (
@@ -20,7 +21,7 @@ const checkpointsPoolingHandler = ({ racingRepository }) => {
           clearInterval(poolingInterval);
           onFinishedPooling(partials);
         }
-      }, 5000);
+      }, POOLING_INTERVAL);
     } catch (error) {
       onError(error);
     }

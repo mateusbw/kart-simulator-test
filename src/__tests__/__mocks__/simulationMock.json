@@ -1,32 +1,20 @@
 [
     {
         "carId":"600f7c6f-369f-4fef-acc4-ea61a9416ead",
-        "averageSpeed": 0,
-        "currentLape": 0,
-        "currentSpeed": 0,
         "racerName": "A",
-        "time": 0,
         "totalLapes": "10",
-        "travelledDistance": 0
+        "startingGrid": 1
     },
     {
         "carId":"fcf3b1bd-5110-4c2e-9ec8-5e62308c2675",
-        "averageSpeed": 0,
-        "currentLape": 0,
-        "currentSpeed": 0,
         "racerName": "B",
-        "time": 0,
         "totalLapes": "10",
-        "travelledDistance": 0
+        "startingGrid": 2
     },
     {
         "carId":"11fa369a-d5a6-4979-942d-9f139670ce6c",
-        "averageSpeed": 0,
-        "currentLape": 0,
-        "currentSpeed": 0,
         "racerName": "C",
-        "time": 0,
         "totalLapes": "10",
-        "travelledDistance": 0
+        "startingGrid": 3
     }
 ]

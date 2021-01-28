@@ -5,10 +5,12 @@ import createStartRacingSimulation from "./app/racing/startRacingSimulation";
 import createCheckpointsPoolingHandler from "./app/racing/checkpointsPoolingHandler";
 import createStopRacingSimulation from "./app/racing/stopRacingSimulation";
 
+// Infra
 const racingRepository = createRacingRepository({
   kartRacingApiService,
 });
 
+// APP
 export const getRacingSettings = createGetRacingSettings({
   racingRepository,
 });

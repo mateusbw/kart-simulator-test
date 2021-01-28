@@ -27,11 +27,6 @@ const racingRepository = ({ kartRacingApiService }) => ({
         carId: current,
         racerName: simulation.cars[current],
         totalLapes: parseInt(simulation.lapes, 10),
-        currentLape: 0,
-        currentSpeed: 0,
-        averageSpeed: 0,
-        travelledDistance: 0,
-        time: 0,
         startingGrid: index + 1,
       });
       return prev;

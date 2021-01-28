@@ -1,8 +1,5 @@
 import { DateTime, Duration } from "luxon";
 
-export const normalizeUnixEpochDate = (date) =>
-  DateTime.fromMillis(date).toISO();
-
 export const diffTime = (a, b, unit = "seconds") =>
   Math.round(DateTime.fromMillis(a).diff(DateTime.fromMillis(b)).as(unit));
 

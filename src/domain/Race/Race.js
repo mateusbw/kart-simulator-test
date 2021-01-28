@@ -10,10 +10,9 @@ export const sortPosition = (carSimulationA, carSimulationB) => {
 export const calculateTime = (carCheckpoits = []) =>
   carCheckpoits.length < 2
     ? 0
-    : -1 *
-      diffTime(
-        carCheckpoits[0].timestamp,
+    : diffTime(
         carCheckpoits[carCheckpoits.length - 1].timestamp,
+        carCheckpoits[0].timestamp,
         "milliseconds"
       );
 
@@ -24,19 +23,23 @@ export const calculateCurrentLape = (carCheckpoits = [], settings) => {
 };
 
 export const calculateTravelledDistance = (carCheckpoits = [], settings) => {
+  if (carCheckpoits.length === 0) return 0;
   const passedCheckpointsCount = carCheckpoits.length;
   const totalCheckpointsCount = settings.checkpoints.length;
   const lapes = Math.trunc(
     passedCheckpointsCount / (totalCheckpointsCount + 1)
   );
-  const rest = passedCheckpointsCount % (totalCheckpointsCount + 1);
+  const isCompleteLap = !(passedCheckpointsCount % (totalCheckpointsCount + 1));
+  const rest = passedCheckpointsCount % totalCheckpointsCount;
   return (
     settings.track_length * lapes +
-    (!rest ? rest : settings.checkpoints[rest - 1])
+    (isCompleteLap
+      ? 0
+      : settings.checkpoints[(rest || carCheckpoits.length) - 1])
   );
 };
 
-export const calculateCurrentSeed = (carCheckpoits = [], trackLength) => {
+export const calculateCurrentSpeed = (carCheckpoits = [], trackLength) => {
   if (carCheckpoits.length < 2) return 0;
   const lastPosition = !carCheckpoits[carCheckpoits.length - 1].position
     ? trackLength
@@ -93,7 +96,7 @@ export const calculateRacePartials = (checkpoints, settings, simulation) =>
               checkpoints[carSimulation.carId],
               settings
             ),
-            currentSpeed: calculateCurrentSeed(
+            currentSpeed: calculateCurrentSpeed(
               checkpoints[carSimulation.carId],
               settings.track_length
             ),

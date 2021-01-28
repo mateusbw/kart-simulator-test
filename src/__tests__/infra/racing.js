@@ -1,39 +1,90 @@
-import racingRepository from "../../infra/racing";
+import makeRacingRepository from "../../infra/racing";
 
 import checkpoints from "../__mocks__/checkpointsMock.json";
+import settings from "../__mocks__/settingsMock.json";
 
-describe("Racing Repository", () => {
+let racingRepository;
+let kartRacingApiService;
+
+const raceStartSimulation = {
+  lapes: 10,
+  cars: {
+    "600f7c6f-369f-4fef-acc4-ea61a9416ea1": "Rubinho",
+    "600f7c6f-369f-4fef-acc4-ea61a9416ea2": "Felipe Massa",
+  },
+};
+
+describe("Infra > Racing Repository", () => {
+  describe("getRacingSetting", () => {
+    it("should use kartRacingApiService to make the request", async () => {
+      kartRacingApiService = {
+        get: jest.fn().mockReturnValue(settings),
+      };
+
+      racingRepository = makeRacingRepository({ kartRacingApiService });
+
+      await racingRepository.getRacingSetting();
+
+      expect(kartRacingApiService.get).toBeCalledWith("settings");
+    });
+  });
+  describe("startRacingSimulation", () => {
+    it("should use kartRacingApiService to make the request", async () => {
+      kartRacingApiService = {
+        post: jest.fn().mockReturnValue({ status: "success" }),
+      };
+
+      racingRepository = makeRacingRepository({ kartRacingApiService });
+
+      await racingRepository.startRacingSimulation(raceStartSimulation);
+
+      expect(kartRacingApiService.post).toBeCalledWith("start");
+    });
+  });
+  describe("getRacingCheckPoints", () => {
+    it("should use kartRacingApiService to make the request", async () => {
+      kartRacingApiService = {
+        get: jest.fn().mockReturnValue({ payload: checkpoints }),
+      };
+
+      racingRepository = makeRacingRepository({ kartRacingApiService });
+
+      await racingRepository.getRacingCheckPoints();
+
+      expect(kartRacingApiService.get).toBeCalledWith("checkpoints");
+    });
+  });
+  describe("stopRacingSimulation", () => {
+    it("should use kartRacingApiService to make the request", async () => {
+      kartRacingApiService = {
+        post: jest.fn().mockReturnValue({ status: "success" }),
+      };
+
+      racingRepository = makeRacingRepository({ kartRacingApiService });
+
+      await racingRepository.stopRacingSimulation();
+
+      expect(kartRacingApiService.post).toBeCalledWith("stop");
+    });
+  });
+
   describe("formatRacingStartSimulation", () => {
     it("should format race start somulation", () => {
       expect(
-        racingRepository({}).formatRacingStartSimulation({
-          lapes: 10,
-          cars: {
-            "600f7c6f-369f-4fef-acc4-ea61a9416ea1": "Rubinho",
-            "600f7c6f-369f-4fef-acc4-ea61a9416ea2": "Felipe Massa",
-          },
-        })
+        makeRacingRepository({}).formatRacingStartSimulation(
+          raceStartSimulation
+        )
       ).toEqual([
         {
           carId: "600f7c6f-369f-4fef-acc4-ea61a9416ea1",
           racerName: "Rubinho",
           totalLapes: 10,
-          currentLape: 0,
-          currentSpeed: 0,
-          averageSpeed: 0,
-          travelledDistance: 0,
-          time: 0,
           startingGrid: 1,
         },
         {
           carId: "600f7c6f-369f-4fef-acc4-ea61a9416ea2",
           racerName: "Felipe Massa",
           totalLapes: 10,
-          currentLape: 0,
-          currentSpeed: 0,
-          averageSpeed: 0,
-          travelledDistance: 0,
-          time: 0,
           startingGrid: 2,
         },
       ]);
@@ -41,7 +92,7 @@ describe("Racing Repository", () => {
   });
   describe("formatCheckpoints", () => {
     it("should format checkpoints correctly", () => {
-      expect(racingRepository({}).formatCheckpoints(checkpoints)).toEqual({
+      expect(makeRacingRepository({}).formatCheckpoints(checkpoints)).toEqual({
         "600f7c6f-369f-4fef-acc4-ea61a9416ead": [
           { position: 0, timestamp: 1611608221275 },
           { position: 130, timestamp: 1611608230429 },
