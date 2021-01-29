@@ -80,12 +80,22 @@ describe("Infra > Racing Repository", () => {
           racerName: "Rubinho",
           totalLapes: 10,
           startingGrid: 1,
+          currentLape: 0,
+          currentSpeed: 0,
+          averageSpeed: 0,
+          travelledDistance: 0,
+          time: 0,
         },
         {
           carId: "600f7c6f-369f-4fef-acc4-ea61a9416ea2",
           racerName: "Felipe Massa",
           totalLapes: 10,
           startingGrid: 2,
+          currentLape: 0,
+          currentSpeed: 0,
+          averageSpeed: 0,
+          travelledDistance: 0,
+          time: 0,
         },
       ]);
     });

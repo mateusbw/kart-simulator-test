@@ -16,6 +16,7 @@ const checkpointsPoolingHandler = ({ racingRepository }) => {
           settings,
           racingSimulation
         );
+        racingSimulation = partials;
         onSucessPolling(partials);
         if (isRaceFinished(partials)) {
           clearInterval(poolingInterval);
